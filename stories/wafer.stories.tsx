@@ -7,17 +7,17 @@ export default {
   title: 'Example/Wafer',
   component: Wafer,
   argTypes: {
-    test: {
-      defaultValue: 'test',
-      control: 'string',
+    rows: {
+      defaultValue: '6',
+      control: 'number',
+    },
+    columns: {
+      defaultValue: '7',
+      control: 'number',
     },
   },
 } as Meta;
 
 export function Control(props: WaferProps) {
-  return <Wafer {...props} />;
-}
-
-export function SmallWafer() {
-  return <Wafer test="test" />;
+  return <Wafer size={320} {...props} />;
 }

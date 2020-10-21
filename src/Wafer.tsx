@@ -1,5 +1,8 @@
 import React, { CSSProperties, FunctionComponent, useMemo } from 'react';
 
+import WaferCircle from './WaferCircle';
+import { calculateDiameter, listLabels } from './utils';
+
 export interface WaferItem {
   index: string;
   isTaken?: boolean;
@@ -10,7 +13,6 @@ export interface WaferProps {
   columns: number;
   size: number;
   items: WaferItem[];
-  showFlat?: boolean;
   onSelect?: () => void;
   onBlur?: () => void;
 }
@@ -24,6 +26,7 @@ function getWaferStyle(columns: number, size: number): CSSProperties {
     gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
     borderWidth: '2px 0 0 2px',
     borderStyle: 'solid',
+    backgroundColor: 'transparent',
   };
 }
 
@@ -43,37 +46,6 @@ function getItemStyle(
   };
 }
 
-function listLabels(rows: number, columns: number): string[] {
-  let labels = new Array(rows * columns);
-  let index = 0;
-  let currNumber = 0;
-  for (let row = 0; row < rows; row++) {
-    for (let column = 0; column < columns; column++) {
-      if (
-        // Borders
-        row === 0 ||
-        column === 0 ||
-        column + 1 >= columns ||
-        row + 1 >= rows
-      ) {
-        labels[index] = '';
-      } else if (
-        // Edges
-        (row === 1 && column === 1) ||
-        (row === 1 && column === columns - 2) ||
-        (row === rows - 2 && column === 1) ||
-        (row === rows - 2 && column === columns - 2)
-      ) {
-        labels[index] = '';
-      } else {
-        labels[index] = String(++currNumber);
-      }
-      index++;
-    }
-  }
-  return labels;
-}
-
 export const Wafer: FunctionComponent<WaferProps> = (props) => {
   const { rows, columns, size } = props;
   const devices = useMemo(() => listLabels(rows, columns), [rows, columns]);
@@ -86,8 +58,14 @@ export const Wafer: FunctionComponent<WaferProps> = (props) => {
     columns,
     size,
   ]);
+  const diameter = useMemo(() => calculateDiameter(size, rows, columns), [
+    rows,
+    columns,
+    size,
+  ]);
   return (
     <div style={waferStyle}>
+      <WaferCircle diameter={diameter} size={size} />
       {devices.map((val, index) => (
         // eslint-disable-next-line react/no-array-index-key
         <div key={`device_${index}`} style={itemStyle}>

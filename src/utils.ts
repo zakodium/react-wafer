@@ -1,7 +1,21 @@
-export function listLabels(rows: number, columns: number): string[] {
+import { WaferItem } from './Wafer';
+
+/**
+ * Return ordered list of labels for the grid
+ * @param rows Number of rows
+ * @param columns Number of columns
+ * @param picked List of picked items
+ * @returns List of labels, with a number if the square is complete, empty othewise
+ */
+export function listLabels(
+  rows: number,
+  columns: number,
+  picked: WaferItem[],
+): Array<{ label: string; picked: boolean }> {
   let labels = new Array(rows * columns);
   let index = 0;
   let currNumber = 0;
+
   for (let row = 0; row < rows; row++) {
     for (let column = 0; column < columns; column++) {
       if (
@@ -11,7 +25,7 @@ export function listLabels(rows: number, columns: number): string[] {
         column + 1 >= columns ||
         row + 1 >= rows
       ) {
-        labels[index] = '';
+        labels[index] = { label: '', picked: false };
       } else if (
         // Edges
         (row === 1 && column === 1) ||
@@ -19,9 +33,13 @@ export function listLabels(rows: number, columns: number): string[] {
         (row === rows - 2 && column === 1) ||
         (row === rows - 2 && column === columns - 2)
       ) {
-        labels[index] = '';
+        labels[index] = { label: '', picked: false };
       } else {
-        labels[index] = String(++currNumber);
+        const label = String(++currNumber);
+        const pickedSearch = picked.find((item) => item.index === label);
+        labels[index] = pickedSearch
+          ? { label: pickedSearch.label || label, picked: true }
+          : { label, picked: false };
       }
       index++;
     }
@@ -29,7 +47,18 @@ export function listLabels(rows: number, columns: number): string[] {
   return labels;
 }
 
-export function calculateDiameter(size: number, rows: number, columns: number) {
+/**
+ * Calculates the diameter of the inscribed circle
+ * @param size Pixel's size of the parent square
+ * @param rows Number of rows
+ * @param columns Number of columns
+ * @returns diameter in pixels of the inscribed circle
+ */
+export function calculateDiameter(
+  size: number,
+  rows: number,
+  columns: number,
+): number {
   const step = { x: size / columns, y: size / rows };
   const cathetus = {
     x: (columns - (columns > rows ? 2 : 4)) * step.x,

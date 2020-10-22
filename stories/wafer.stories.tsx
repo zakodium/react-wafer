@@ -24,6 +24,7 @@ export function Control(props: WaferProps) {
     <Wafer
       pickedItems={pickedItems}
       size={320}
+      // eslint-disable-next-line no-console
       onSelect={console.log}
       {...props}
     />

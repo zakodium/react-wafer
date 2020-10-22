@@ -19,5 +19,6 @@ export default {
 } as Meta;
 
 export function Control(props: WaferProps) {
-  return <Wafer size={320} {...props} />;
+  const pickedItems = [{ index: '3' }, { index: '5', label: 'owner' }];
+  return <Wafer pickedItems={pickedItems} size={320} {...props} />;
 }

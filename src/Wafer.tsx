@@ -24,7 +24,7 @@ function getWaferStyle(columns: number, size: number): CSSProperties {
     display: 'grid',
     gap: 0,
     gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-    borderWidth: '2px 0 0 2px',
+    borderWidth: '1.5px 0 0 1.5px',
     borderStyle: 'solid',
     backgroundColor: 'transparent',
   };
@@ -36,9 +36,9 @@ function getItemStyle(
   size: number,
 ): CSSProperties {
   return {
-    height: size / rows - 2,
-    width: size / columns - 2,
-    borderWidth: '0 2px 2px 0',
+    height: size / rows - 1.5,
+    width: size / columns - 1.5,
+    borderWidth: '0 1.5px 1.5px 0',
     borderStyle: 'solid',
     display: 'flex',
     alignItems: 'center',

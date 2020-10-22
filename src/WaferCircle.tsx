@@ -11,7 +11,7 @@ function getCircleStyle(diameter: number): CSSProperties {
     width: diameter,
     position: 'relative',
     borderRadius: '50%',
-    background: 'lightblue',
+    background: '#549ADA',
   };
 }
 const WaferCircle: FunctionComponent<WaferCircleProps> = ({

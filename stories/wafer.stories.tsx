@@ -20,5 +20,12 @@ export default {
 
 export function Control(props: WaferProps) {
   const pickedItems = [{ index: '3' }, { index: '5', label: 'owner' }];
-  return <Wafer pickedItems={pickedItems} size={320} {...props} />;
+  return (
+    <Wafer
+      pickedItems={pickedItems}
+      size={320}
+      onSelect={console.log}
+      {...props}
+    />
+  );
 }

@@ -15,7 +15,7 @@ export interface WaferProps {
   columns: number;
   size: number;
   pickedItems: WaferItem[]; // List of taken items
-  onSelect?: () => void;
+  onSelect?: (position: number, label: string, picked: boolean) => void;
 }
 
 /**
@@ -59,7 +59,7 @@ function getItemStyle(
 }
 
 export const Wafer: FunctionComponent<WaferProps> = (props) => {
-  const { rows, columns, size, pickedItems = [] } = props;
+  const { rows, columns, size, pickedItems = [], onSelect } = props;
   const devices = useMemo(() => listLabels(rows, columns, pickedItems), [
     rows,
     columns,
@@ -89,6 +89,7 @@ export const Wafer: FunctionComponent<WaferProps> = (props) => {
           style={
             picked ? { ...itemStyle, backgroundColor: '#5dbb6d' } : itemStyle
           }
+          onClick={() => onSelect?.(index, label, picked)}
         >
           {label}
         </div>

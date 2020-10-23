@@ -1,4 +1,4 @@
-import React, { CSSProperties, FunctionComponent, useMemo } from 'react';
+import React, { CSSProperties } from 'react';
 
 interface WaferCircleProps {
   diameter: number;
@@ -14,11 +14,9 @@ function getCircleStyle(diameter: number): CSSProperties {
     background: '#549ADA',
   };
 }
-const WaferCircle: FunctionComponent<WaferCircleProps> = ({
-  diameter,
-  size,
-}) => {
-  const circleStyle = useMemo(() => getCircleStyle(diameter), [diameter]);
+
+export default function WaferCircle({ diameter, size }: WaferCircleProps) {
+  const circleStyle = getCircleStyle(diameter);
   const containerStyle: CSSProperties = {
     position: 'absolute',
     width: size,
@@ -34,6 +32,4 @@ const WaferCircle: FunctionComponent<WaferCircleProps> = ({
       <div style={circleStyle} />
     </div>
   );
-};
-
-export default WaferCircle;
+}

@@ -27,7 +27,11 @@
     "type": "git",
     "url": "git+https://github.com/zakodium/react-wafer.git"
   },
-  "keywords": [],
+  "keywords": [
+    "wafer",
+    "dicing",
+    "physics"
+  ],
   "author": "Miguel Asencio",
   "license": "MIT",
   "bugs": {

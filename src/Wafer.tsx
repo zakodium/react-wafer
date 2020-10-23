@@ -1,4 +1,4 @@
-import React, { CSSProperties, FunctionComponent, useMemo } from 'react';
+import React, { CSSProperties, useMemo } from 'react';
 
 import WaferCircle from './WaferCircle';
 import { calculateDiameter, listLabels } from './utils';
@@ -58,27 +58,16 @@ function getItemStyle(
   };
 }
 
-export const Wafer: FunctionComponent<WaferProps> = (props) => {
+export function Wafer(props: WaferProps) {
   const { rows, columns, size, pickedItems = [], onSelect } = props;
   const devices = useMemo(() => listLabels(rows, columns, pickedItems), [
     rows,
     columns,
     pickedItems,
   ]);
-  const waferStyle = useMemo(() => getWaferStyle(columns, size), [
-    columns,
-    size,
-  ]);
-  const itemStyle = useMemo(() => getItemStyle(rows, columns, size), [
-    rows,
-    columns,
-    size,
-  ]);
-  const diameter = useMemo(() => calculateDiameter(size, rows, columns), [
-    rows,
-    columns,
-    size,
-  ]);
+  const waferStyle = getWaferStyle(columns, size);
+  const itemStyle = getItemStyle(rows, columns, size);
+  const diameter = calculateDiameter(size, rows, columns);
   return (
     <div style={waferStyle}>
       <WaferCircle diameter={diameter} size={size} />
@@ -96,4 +85,4 @@ export const Wafer: FunctionComponent<WaferProps> = (props) => {
       ))}
     </div>
   );
-};
+}

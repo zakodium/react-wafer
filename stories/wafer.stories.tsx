@@ -15,18 +15,11 @@ export default {
       defaultValue: '7',
       control: 'number',
     },
+    onSelect: { action: 'onSelect' },
   },
 } as Meta;
 
 export function Control(props: WaferProps) {
   const pickedItems = [{ index: '3' }, { index: '5', label: 'owner' }];
-  return (
-    <Wafer
-      pickedItems={pickedItems}
-      size={320}
-      // eslint-disable-next-line no-console
-      onSelect={console.log}
-      {...props}
-    />
-  );
+  return <Wafer pickedItems={pickedItems} size={320} {...props} />;
 }

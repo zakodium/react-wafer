@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.1](https://www.github.com/zakodium/react-wafer/compare/v1.0.0...v1.0.1) (2020-11-02)
+
+
+### Bug Fixes
+
+* release unchanged name ([4fd7866](https://www.github.com/zakodium/react-wafer/commit/4fd7866c2328b7898360ae30fecbe2610facd574))
+
 ## 1.0.0 (2020-11-01)
 
 

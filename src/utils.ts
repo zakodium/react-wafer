@@ -54,7 +54,7 @@ export function listLabels(
  * @param columns Number of columns
  * @returns diameter in pixels of the inscribed circle
  */
-export function calculateDiameter(
+export function calculateRadius(
   size: number,
   rows: number,
   columns: number,
@@ -64,5 +64,5 @@ export function calculateDiameter(
     x: (columns - (columns > rows ? 2 : 4)) * step.x,
     y: (columns - (columns > rows ? 4 : 2)) * step.x,
   };
-  return Math.sqrt(Math.pow(cathetus.x, 2) + Math.pow(cathetus.y, 2));
+  return Math.sqrt(Math.pow(cathetus.x, 2) + Math.pow(cathetus.y, 2)) / 2;
 }

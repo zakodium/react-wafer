@@ -1,7 +1,6 @@
-import React, { CSSProperties, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
-import WaferCircle from './WaferCircle';
-import { calculateDiameter, listLabels } from './utils';
+import { calculateRadius, listLabels } from './utils';
 
 // An item is a square in the wafer grid
 export interface WaferItem {
@@ -15,47 +14,11 @@ export interface WaferProps {
   columns: number;
   size: number;
   pickedItems: WaferItem[]; // List of taken items
-  onSelect?: (position: number, label: string, picked: boolean) => void;
-}
-
-/**
- * CSS for the root component
- * @param columns Number of columns
- * @param size Pixel's size of the parent square
- */
-function getWaferStyle(columns: number, size: number): CSSProperties {
-  return {
-    height: size,
-    width: size,
-    display: 'grid',
-    gap: 0,
-    gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-    borderWidth: '1.5px 0 0 1.5px',
-    borderStyle: 'solid',
-    backgroundColor: 'transparent',
-  };
-}
-
-/**
- * CSS for each square in the grid
- * @param rows Number of rows
- * @param columns Number of columns
- * @param size Pixel's size of the parent square
- */
-function getItemStyle(
-  rows: number,
-  columns: number,
-  size: number,
-): CSSProperties {
-  return {
-    height: size / rows - 1.5,
-    width: size / columns - 1.5,
-    borderWidth: '0 1.5px 1.5px 0',
-    borderStyle: 'solid',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  };
+  onSelect?: (
+    position: Record<'x' | 'y', number>,
+    label: string,
+    picked: boolean,
+  ) => void;
 }
 
 export function Wafer(props: WaferProps) {
@@ -65,24 +28,61 @@ export function Wafer(props: WaferProps) {
     columns,
     pickedItems,
   ]);
-  const waferStyle = getWaferStyle(columns, size);
-  const itemStyle = getItemStyle(rows, columns, size);
-  const diameter = calculateDiameter(size, rows, columns);
+
+  const groupsSquares = useMemo(() => {
+    const squareWidth = size / columns;
+    const squareHeight = size / rows;
+
+    let groupsSquares = new Array(rows);
+    for (let row = 0; row < rows; row++) {
+      let rowGroup = new Array(columns);
+      for (let column = 0; column < columns; column++) {
+        const index = row * columns + column;
+        const translate = `translate(${column * squareWidth}, ${
+          row * squareHeight
+        })`;
+        rowGroup[column] = (
+          <g key={column} transform={translate}>
+            <rect
+              x={0}
+              y={0}
+              width={squareWidth}
+              height={squareHeight}
+              fill={devices[index].picked ? '#5dbb6d' : 'transparent'}
+              stroke="#222"
+              onClick={() =>
+                onSelect(
+                  { x: column, y: row },
+                  devices[index].label,
+                  devices[index].picked,
+                )
+              }
+            />
+            <text
+              x={squareWidth / 2}
+              y={squareHeight / 2}
+              dominantBaseline="middle"
+              textAnchor="middle"
+            >
+              {devices[index].label}
+            </text>
+          </g>
+        );
+      }
+      groupsSquares[row] = <g key={row}>{rowGroup}</g>;
+    }
+    return groupsSquares;
+  }, [rows, columns, size, devices, onSelect]);
+
   return (
-    <div style={waferStyle}>
-      <WaferCircle diameter={diameter} size={size} />
-      {devices.map(({ label, picked }, index) => (
-        <div
-          // eslint-disable-next-line react/no-array-index-key
-          key={`device_${index}`}
-          style={
-            picked ? { ...itemStyle, backgroundColor: '#5dbb6d' } : itemStyle
-          }
-          onClick={() => onSelect?.(index, label, picked)}
-        >
-          {label}
-        </div>
-      ))}
-    </div>
+    <svg height={size} width={size}>
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        fill="#549ADA"
+        r={calculateRadius(size, rows, columns)}
+      />
+      {groupsSquares}
+    </svg>
   );
 }

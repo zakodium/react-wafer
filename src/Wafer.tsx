@@ -9,30 +9,34 @@ export interface WaferItem {
 }
 
 // Main component properties
+type PositionType = Record<'x' | 'y', number>;
 export interface WaferProps {
   rows: number;
   columns: number;
   size: number;
   pickedItems: WaferItem[]; // List of taken items
-  onSelect?: (
-    position: Record<'x' | 'y', number>,
-    label: string,
-    picked: boolean,
-  ) => void;
+  onSelect?: (position: PositionType, label: string, picked: boolean) => void;
+  selected?: Array<PositionType | string>;
 }
 
 export function Wafer(props: WaferProps) {
-  const { rows, columns, size, pickedItems = [], onSelect } = props;
+  const {
+    rows,
+    columns,
+    size,
+    pickedItems = [],
+    onSelect,
+    selected = [],
+  } = props;
   const devices = useMemo(() => listLabels(rows, columns, pickedItems), [
     rows,
     columns,
     pickedItems,
   ]);
 
+  const squareWidth = size / columns;
+  const squareHeight = size / rows;
   const groupsSquares = useMemo(() => {
-    const squareWidth = size / columns;
-    const squareHeight = size / rows;
-
     let groupsSquares = new Array(rows);
     for (let row = 0; row < rows; row++) {
       let rowGroup = new Array(columns);
@@ -72,7 +76,50 @@ export function Wafer(props: WaferProps) {
       groupsSquares[row] = <g key={row}>{rowGroup}</g>;
     }
     return groupsSquares;
-  }, [rows, columns, size, devices, onSelect]);
+  }, [rows, columns, squareWidth, squareHeight, devices, onSelect]);
+
+  const selectionBorders = useMemo(
+    () =>
+      selected.map((val) => {
+        switch (typeof val) {
+          case 'string': {
+            // string
+            const index = devices.findIndex(({ label }) => label === val);
+            if (index < 0) return null;
+            const x = (index % columns) * squareWidth;
+            const y = Math.floor(index / columns) * squareHeight;
+            return (
+              <path
+                key={`string-${val}`}
+                d={`M${x} ${y}h${squareWidth}v${squareHeight}h${-squareWidth}Z`}
+                fill="none"
+                stroke="red"
+              />
+            );
+          }
+          case 'object': {
+            // PositionType
+            const { x, y } = val;
+            return (
+              <path
+                key={`coord-${x}-${y}`}
+                d={`M${x * squareWidth} ${
+                  y * squareHeight
+                }h${squareWidth}v${squareHeight}h${-squareWidth}Z`}
+                fill="none"
+                stroke="red"
+              />
+            );
+          }
+          default: {
+            throw new Error(
+              `${typeof val} is not an accepted value for selection`,
+            );
+          }
+        }
+      }),
+    [columns, squareWidth, squareHeight, devices, selected],
+  );
 
   return (
     <svg height={size} width={size}>
@@ -83,6 +130,7 @@ export function Wafer(props: WaferProps) {
         r={calculateRadius(size, rows, columns)}
       />
       {groupsSquares}
+      {selectionBorders}
     </svg>
   );
 }

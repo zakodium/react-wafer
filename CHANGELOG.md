@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://www.github.com/zakodium/react-wafer/compare/v1.0.1...v1.1.0) (2021-03-15)
+
+
+### Features
+
+* highlight selected nodes ([2c1e5c4](https://www.github.com/zakodium/react-wafer/commit/2c1e5c4d4af34cf5b8cfe54d91880183bc59ee6c))
+
 ### [1.0.1](https://www.github.com/zakodium/react-wafer/compare/v1.0.0...v1.0.1) (2020-11-02)
 
 
